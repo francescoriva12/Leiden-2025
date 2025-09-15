@@ -6,7 +6,7 @@ from test_bases import B2, B4, B24
 # The exercises comprises of function to be implemented (except Exercise 0):
 # Replace the keyword "pass" with your implementation of the desired function
 
-############ 
+############
 # Exercise 0
 # Warm-up: Lattices
 ############
@@ -31,11 +31,15 @@ def in_lattice(B, v):
     3. Check equality up to some small tolerance.
     """
 
-	pass
+	x = v@ np.linalg.inv(B)
+
+	x = np.linalg.solve(B.transpose(), v)
+	xr = np.round(x)
+	return np.allclose(x, v)
 
 ############
 # Exercise 1
-# Implement the Simple Rounding Algorithm 
+# Implement the Simple Rounding Algorithm
 ############
 
 def simple_rounding(B, t):
@@ -53,7 +57,7 @@ def simple_rounding(B, t):
     :notes: Make use of numpy.linalg function solve and numpy function round.
     """
 
-	pass
+
 
 
 ############
@@ -79,8 +83,8 @@ def orth_proj(x, y):
 
     :notes: Make use of the dot product via `@` operator. Assumes `y` is non-zero.
     """
-	
-	pass
+
+
 
 def Gram_Schmidt_orth(B):
 	"""
@@ -99,10 +103,18 @@ def Gram_Schmidt_orth(B):
 	2. Span of the first i rows of the Gram-Schmidt orthogonalized basis is the same as the span
 	of the first i rows of the lattice basis B.
 	3. All Gram-Schmidt orthogonalized vectors are pairwise orthogonal.
-	4. Each Gram-Schmidt orthogonalized vector is orthogonal to all the previous basis vectors.        
+	4. Each Gram-Schmidt orthogonalized vector is orthogonal to all the previous basis vectors.
     """
 
-	pass
+	n,_ = B.shape
+	Bs = np.zeros(n, dtype=float)
+
+	for i in reange(n):
+		Bs[i] =B[i]
+		for j in range(i):
+			Bs[i] -= orth_proj(B[i], Bs[j])
+
+	return Bs
 
 
 ############
@@ -155,11 +167,11 @@ def compare_norm_distrib(B, num_samples):
     :type num_samples: int
 
     :notes: Make use of numpy.linalg function norm and numpy.random function rand, as well
-	as 
+	as
     """
 
 	pass
-	
+
 
 ############
 # Helper functions
@@ -167,28 +179,28 @@ def compare_norm_distrib(B, num_samples):
 
 def plot_two_hist(data_SR, data_NP, n, save=False):
 	"""Take is input two lists and plot two histograms"""
-	
+
 	_, bins, _ = plt.hist(data_SR, bins=100, density=True, label="Simple Rounding")
 	_ = plt.hist(data_NP, bins=bins, alpha=0.5, density=True, label="Nearest Plane")
-	
+
 	plt.title("Length of random points in Fundamental Parallelepiped \n Basis dimension: %d"%n)
 	plt.legend()
-	
+
 	if save:
 		plt.savefig("ParallelepipedDistDim%d.png"%n)
 	else:
 		plt.show()
-	
+
 	plt.clf()
 	plt.close()
-	
+
 
 ############
 # Main runner
 ############
 if __name__ == "__main__":
     plot_bases = [B2, B4, B24]
-	
+
     for B in plot_bases:
         print("\n========================================")
         print("Running compare_norm_distrib for basis with shape:", B.shape)
