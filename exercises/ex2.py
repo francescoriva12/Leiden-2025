@@ -31,11 +31,11 @@ def in_lattice(B, v):
     3. Check equality up to some small tolerance.
     """
 
-	x = v@ np.linalg.inv(B)
-
+	#x = v@ np.linalg.inv(B)
 	x = np.linalg.solve(B.transpose(), v)
 	xr = np.round(x)
-	return np.allclose(x, v)
+
+	return np.allclose(x-xr, 0)
 
 ############
 # Exercise 1
@@ -57,7 +57,11 @@ def simple_rounding(B, t):
     :notes: Make use of numpy.linalg function solve and numpy function round.
     """
 
+	#x = v@ np.linalg.inv(B)
+	x = np.linalg.solve(B.transpose(), v)
+	xr = np.round(x)
 
+	return xr
 
 
 ############
@@ -83,7 +87,8 @@ def orth_proj(x, y):
 
     :notes: Make use of the dot product via `@` operator. Assumes `y` is non-zero.
     """
-
+	x -= (x@y)/np.norm(y) * y
+	return x
 
 
 def Gram_Schmidt_orth(B):
